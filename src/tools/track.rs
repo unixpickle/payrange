@@ -74,7 +74,6 @@ fn track_device(
                         last_time
                     },
                     Ok(device_info) => {
-                        // TODO: delete.
                         if let Some(time) = last_time {
                             if time != device_info.updated {
                                 sub_logger.send((sub_id, time)).unwrap();
