@@ -10,7 +10,7 @@ mod util;
 use std::process::exit;
 
 use clap::{App, Arg};
-use payrange::{DeviceRequest, DeviceResponse, call_api, make_client};
+use payrange::Client;
 use tokio_core::reactor::Core;
 
 use util::{get_token, token_arg};
@@ -27,14 +27,8 @@ fn main() {
     let device_id = matches.value_of("id").unwrap().to_owned();
 
     let mut core = Core::new().unwrap();
-    let client = make_client(&core.handle());
-    let resp_future = call_api(client, "/device", &DeviceRequest{
-        auth: auth_token,
-        id: device_id,
-        include_loyalty_points_offer: true
-    });
-    let result: Result<DeviceResponse, _> = core.run(resp_future);
-    match result {
+    let client = Client::new(&core.handle());
+    match core.run(client.get_device(auth_token, device_id)) {
         Ok(info) => {
             println!("{}", serde_yaml::to_string(&info).unwrap());
         },

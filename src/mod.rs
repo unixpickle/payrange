@@ -13,8 +13,9 @@ pub mod call;
 pub mod error;
 pub mod request;
 pub mod response;
+pub mod client;
 
-pub use call::{call_api, make_client};
+pub use call::call_api;
 pub use error::Error;
-pub use request::{AuthRequest, DeviceRequest};
 pub use response::{DeviceResponse, UserResponse};
+pub use client::Client;

@@ -6,34 +6,36 @@ use serde_yaml;
 
 #[derive(Debug)]
 pub enum Error {
-    HyperError(hyper::Error),
-    YamlError(serde_yaml::Error),
-    RemoteError{status: i32, reason: Option<String>}
+    Hyper(hyper::Error),
+    Yaml(serde_yaml::Error),
+    Remote{status: i32, reason: Option<String>},
+    Other(String)
 }
 
 impl From<hyper::Error> for Error {
     fn from(e: hyper::Error) -> Error {
-        Error::HyperError(e)
+        Error::Hyper(e)
     }
 }
 
 impl From<serde_yaml::Error> for Error {
     fn from(e: serde_yaml::Error) -> Error {
-        Error::YamlError(e)
+        Error::Yaml(e)
     }
 }
 
 impl Display for Error {
     fn fmt(&self, f: &mut Formatter) -> Result<(), fmt::Error> {
         match self {
-            &Error::HyperError(ref e) => e.fmt(f),
-            &Error::YamlError(ref e) => e.fmt(f),
-            &Error::RemoteError{status: ref s, reason: Some(ref r)} => {
+            &Error::Hyper(ref e) => e.fmt(f),
+            &Error::Yaml(ref e) => e.fmt(f),
+            &Error::Remote{status: ref s, reason: Some(ref r)} => {
                 write!(f, "remote error with status {}: {}", s, r)
             },
-            &Error::RemoteError{status: ref s, reason: None} => {
+            &Error::Remote{status: ref s, reason: None} => {
                 write!(f, "remote error with status {}", s)
-            }
+            },
+            &Error::Other(ref msg) => write!(f, "{}", msg)
         }
     }
 }
@@ -41,10 +43,13 @@ impl Display for Error {
 impl ::std::error::Error for Error {
     fn description(&self) -> &str {
         match self {
-            &Error::HyperError(ref e) => e.description(),
-            &Error::YamlError(ref e) => e.description(),
-            &Error::RemoteError{status: _, reason: Some(ref r)} => {
+            &Error::Hyper(ref e) => e.description(),
+            &Error::Yaml(ref e) => e.description(),
+            &Error::Remote{status: _, reason: Some(ref r)} => {
                 r
+            },
+            &Error::Other(ref msg) => {
+                msg
             },
             _ => "undescribed error from remote API"
         }
@@ -52,9 +57,9 @@ impl ::std::error::Error for Error {
 
     fn cause(&self) -> Option<&::std::error::Error> {
         match self {
-            &Error::HyperError(ref e) => Some(e),
-            &Error::YamlError(ref e) => Some(e),
-            &Error::RemoteError{status: _, reason: _} => None
+            &Error::Hyper(ref e) => Some(e),
+            &Error::Yaml(ref e) => Some(e),
+            _ => None
         }
     }
 }

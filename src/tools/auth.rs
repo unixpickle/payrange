@@ -7,7 +7,7 @@ extern crate tokio_core;
 use std::process::exit;
 
 use clap::{App, Arg};
-use payrange::{AuthRequest, Error, UserResponse, call_api, make_client};
+use payrange::Client;
 use tokio_core::reactor::Core;
 
 fn main() {
@@ -25,20 +25,13 @@ fn main() {
     let password = matches.value_of("password").unwrap().to_owned();
 
     let mut core = Core::new().unwrap();
-    let client = make_client(&core.handle());
-    let resp_future = call_api(client, "/user/gettoken", &AuthRequest::new_email(email, password));
-    let result: Result<UserResponse, Error> = core.run(resp_future);
-    match result {
-        Ok(info) => {
-            if info.auth.token.is_some() {
-                println!("{}", info.auth.token.unwrap().token_string);
-            } else {
-                eprintln!("no token string in response");
-                exit(1);
-            }
+    let client = Client::new(&core.handle());
+    match core.run(client.get_token_email(email, password)) {
+        Ok(token) => {
+            println!("{}", token);
         },
         Err(err) => {
-            eprintln!("failed to make request: {}", err);
+            eprintln!("failed to get token: {}", err);
             exit(1);
         }
     }

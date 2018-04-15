@@ -1,21 +1,15 @@
 use futures::{Future, IntoFuture, Stream};
 use hyper;
 use hyper::{Client, Method, Request};
-use hyper::client::{Connect, HttpConnector};
+use hyper::client::Connect;
 use hyper::header::ContentType;
-use hyper_tls::HttpsConnector;
 use serde::ser::Serialize;
 use serde::de::DeserializeOwned;
 use serde_yaml;
-use tokio_core::reactor::Handle;
 
 use super::error::Error;
 
 const API_PATH: &str = "https://api.payrange.com";
-
-pub fn make_client(handle: &Handle) -> Client<HttpsConnector<HttpConnector>> {
-    Client::configure().connector(HttpsConnector::new(4, handle).unwrap()).build(handle)
-}
 
 pub fn call_api<A: Serialize, B: DeserializeOwned + 'static, C: Connect>(
     client: Client<C>,
@@ -32,7 +26,7 @@ pub fn call_api<A: Serialize, B: DeserializeOwned + 'static, C: Connect>(
         .and_then(|chunk| {
             let dec_err = serde_yaml::from_slice(&chunk);
             if let Ok(ErrorResponse{status: Some(status), reason: r}) = dec_err {
-                Err(Error::RemoteError{status: status, reason: r})
+                Err(Error::Remote{status: status, reason: r})
             } else {
                 serde_yaml::from_slice(&chunk).map_err(From::from)
             }
