@@ -11,6 +11,10 @@ path = "src/mod.rs"
 name = "payrange-auth"
 path = "src/tools/auth.rs"
 
+[[bin]]
+name = "payrange-device"
+path = "src/tools/device.rs"
+
 [dependencies]
 clap = "2.31"
 futures = "0.1"

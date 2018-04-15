@@ -14,3 +14,12 @@ impl AuthRequest {
 pub enum AuthRequestBody {
     Email{email: [String; 2]}
 }
+
+#[derive(Clone, Debug, Serialize)]
+pub struct DeviceRequest {
+    pub auth: String,
+    #[serde(rename = "_id")]
+    pub id: String,
+    #[serde(rename = "includeLoyaltyPointsOffer")]
+    pub include_loyalty_points_offer: bool
+}

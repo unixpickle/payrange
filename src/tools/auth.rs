@@ -1,4 +1,4 @@
-//! A tool to get a PayRange auth token.
+//! Get a PayRange auth token.
 
 extern crate clap;
 extern crate payrange;
@@ -11,7 +11,7 @@ use payrange::{AuthRequest, Error, UserResponse, call_api, make_client};
 use tokio_core::reactor::Core;
 
 fn main() {
-    let matches = App::new("squidtun-server")
+    let matches = App::new("payrange-auth")
         .arg(Arg::with_name("email")
             .help("Set the login email")
             .required(true)
