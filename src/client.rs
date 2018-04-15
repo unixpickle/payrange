@@ -9,6 +9,7 @@ use super::error::Error;
 use super::request::{AuthRequest, DeviceRequest};
 use super::response::{DeviceResponse, UserResponse};
 
+/// A Client provides a high-level interface for the PayRange API.
 pub struct Client {
     pub client: hyper::Client<HttpsConnector<HttpConnector>>
 }
@@ -21,6 +22,7 @@ impl Client {
         Client{client: client}
     }
 
+    /// Get an authentication token for the email login.
     pub fn get_token_email(
         &self,
         email: String,
@@ -37,6 +39,9 @@ impl Client {
         }))
     }
 
+    /// Get information about a device given its ID.
+    ///
+    /// Device IDs seem to be 8-digit strings, like "10098000".
     pub fn get_device(
         &self,
         token: String,
