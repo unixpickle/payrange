@@ -23,3 +23,9 @@ pub struct DeviceRequest {
     #[serde(rename = "includeLoyaltyPointsOffer")]
     pub include_loyalty_points_offer: bool
 }
+
+#[derive(Clone, Debug, Serialize)]
+pub struct ClaimOfferRequest {
+    pub auth: String,
+    pub code: String
+}

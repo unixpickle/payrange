@@ -6,7 +6,7 @@ use tokio_core::reactor::Handle;
 
 use super::call::call_api;
 use super::error::Error;
-use super::request::{AuthRequest, DeviceRequest};
+use super::request::{AuthRequest, ClaimOfferRequest, DeviceRequest};
 use super::response::{DeviceResponse, UserResponse};
 
 /// A Client provides a high-level interface for the PayRange API.
@@ -47,11 +47,24 @@ impl Client {
         token: String,
         id: String
     ) -> Box<Future<Item = DeviceResponse, Error = Error>> {
-        let resp_future = call_api(self.client.clone(), "/device", &DeviceRequest{
+        Box::new(call_api(self.client.clone(), "/device", &DeviceRequest{
             auth: token,
             id: id,
             include_loyalty_points_offer: true
-        });
-        Box::new(resp_future)
+        }))
+    }
+
+    /// Redeem a coupon via a coupon code.
+    ///
+    /// Coupon codes are 8-digit strings, like "12345678".
+    pub fn claim_offer(
+        &self,
+        token: String,
+        coupon_code: String
+    ) -> Box<Future<Item = UserResponse, Error = Error>> {
+        Box::new(call_api(self.client.clone(), "/offer/claim", &ClaimOfferRequest{
+            auth: token,
+            code: coupon_code
+        }))
     }
 }
