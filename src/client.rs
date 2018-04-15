@@ -10,6 +10,7 @@ use super::request::{AuthRequest, ClaimOfferRequest, DeviceRequest};
 use super::response::{DeviceResponse, UserResponse};
 
 /// A Client provides a high-level interface for the PayRange API.
+#[derive(Clone)]
 pub struct Client {
     pub client: hyper::Client<HttpsConnector<HttpConnector>>
 }

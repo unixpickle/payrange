@@ -15,6 +15,10 @@ path = "src/tools/auth.rs"
 name = "payrange-device"
 path = "src/tools/device.rs"
 
+[[bin]]
+name = "payrange-track"
+path = "src/tools/track.rs"
+
 [dependencies]
 clap = "2.31"
 futures = "0.1"
