@@ -25,25 +25,25 @@ pub struct DeviceResponse {
     pub id: String,
     pub created: u64,
     pub updated: u64,
-    pub location: Location,
+    pub location: Option<Location>,
     #[serde(rename = "machinePosition")]
-    pub machine_position: i32,
-    pub operator: String,
-    pub machine: String,
-    pub machine_id: String,
-    pub category: Category,
+    pub machine_position: Option<i32>,
+    pub operator: Option<String>,
+    pub machine: Option<String>,
+    pub machine_id: Option<String>,
+    pub category: Option<Category>,
     #[serde(rename = "type")]
-    pub currency_type: String,
-    pub claimed: u64,
+    pub currency_type: Option<String>,
+    pub claimed: Option<u64>,
     #[serde(rename = "claimedBy")]
-    pub claimed_by: String,
-    pub spid: Vec<String>,
+    pub claimed_by: Option<String>,
+    pub spid: Option<Vec<String>>,
     #[serde(rename = "deviceType")]
     pub device_type: String,
     #[serde(rename = "creditOptions")]
-    pub credit_options: Vec<CreditOption>,
-    pub image: String,
-    pub thumbnail: String
+    pub credit_options: Option<Vec<CreditOption>>,
+    pub image: Option<String>,
+    pub thumbnail: Option<String>
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
