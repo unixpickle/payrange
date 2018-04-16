@@ -14,7 +14,7 @@ use std::time::Duration;
 
 use clap::{App, Arg};
 use futures::future::{Future, Loop, join_all, loop_fn};
-use payrange::Client;
+use payrange::{Client, DeviceResponse};
 use tokio_core::reactor::{Core, Handle, Timeout};
 
 use util::{get_token, token_arg};
@@ -73,14 +73,15 @@ fn track_device(
                         eprintln!("{}", e);
                         last_time
                     },
-                    Ok(device_info) => {
+                    Ok(DeviceResponse{updated: Some(updated), ..}) => {
                         if let Some(time) = last_time {
-                            if time != device_info.updated {
+                            if time != updated {
                                 sub_logger.send((sub_id, time)).unwrap();
                             }
                         }
-                        Some(device_info.updated)
-                    }
+                        Some(updated)
+                    },
+                    _ => last_time
                 }))
             })
             .and_then(move |loop_res| {
