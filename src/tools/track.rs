@@ -76,7 +76,7 @@ fn track_device(
                     Ok(DeviceResponse{updated: Some(updated), ..}) => {
                         if let Some(time) = last_time {
                             if time != updated {
-                                sub_logger.send((sub_id, time)).unwrap();
+                                sub_logger.send((sub_id, updated)).unwrap();
                             }
                         }
                         Some(updated)
