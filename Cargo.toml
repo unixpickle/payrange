@@ -19,6 +19,10 @@ path = "src/tools/device.rs"
 name = "payrange-track"
 path = "src/tools/track.rs"
 
+[[bin]]
+name = "payrange-scan"
+path = "src/tools/scan.rs"
+
 [dependencies]
 clap = "2.31"
 futures = "0.1"
