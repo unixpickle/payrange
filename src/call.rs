@@ -39,6 +39,7 @@ fn create_request<T: Serialize>(path: &str, payload: &T) -> Result<Request, Erro
     let mut req = Request::new(Method::Post, uri);
     req.set_body(serde_yaml::to_string(payload)?);
     req.headers_mut().set(ContentType("text/plain".parse().unwrap()));
+    req.headers_mut().set_raw("x-pr-api-level", vec![vec!['4' as u8]]);
     Ok(req)
 }
 
