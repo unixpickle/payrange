@@ -6,7 +6,8 @@ use tokio_core::reactor::Handle;
 
 use super::call::call_api;
 use super::error::Error;
-use super::request::{AuthRequest, ClaimOfferRequest, DeviceRequest};
+use super::request::{AuthRequest, AuthRequestBody, ClaimOfferRequest, DeviceRequest,
+    SignupRequest};
 use super::response::{DeviceResponse, UserResponse};
 
 /// A Client provides a high-level interface for the PayRange API.
@@ -37,6 +38,26 @@ impl Client {
             } else {
                 Err(Error::Other("no auth token in response".to_owned()))
             }
+        }))
+    }
+
+    /// Create a new account.
+    ///
+    /// If the email is already in use, this will fail.
+    ///
+    /// The phone number may be an empty string, or must have a country code.
+    /// For example, "+11234567890" is valid, but "1234567890" is not.
+    pub fn create_user(
+        &self,
+        email: String,
+        password: String,
+        name: String,
+        phone: String
+    ) -> Box<Future<Item = UserResponse, Error = Error>> {
+        Box::new(call_api(self.client.clone(), "/user/create", &SignupRequest{
+            new_auth: AuthRequestBody::Email{email: [email, password]},
+            name: name,
+            phone: phone
         }))
     }
 

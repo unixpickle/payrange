@@ -16,6 +16,14 @@ pub enum AuthRequestBody {
 }
 
 #[derive(Clone, Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SignupRequest {
+    pub new_auth: AuthRequestBody,
+    pub name: String,
+    pub phone: String
+}
+
+#[derive(Clone, Debug, Serialize)]
 pub struct DeviceRequest {
     pub auth: String,
     #[serde(rename = "_id")]

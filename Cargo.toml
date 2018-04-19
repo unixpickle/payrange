@@ -23,6 +23,10 @@ path = "src/tools/track.rs"
 name = "payrange-scan"
 path = "src/tools/scan.rs"
 
+[[bin]]
+name = "payrange-signup"
+path = "src/tools/signup.rs"
+
 [dependencies]
 clap = "2.31"
 futures = "0.1"
